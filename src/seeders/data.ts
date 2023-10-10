@@ -34,7 +34,7 @@ export const subscriptionPlan = [
     features: "this is a monthly payment plan",
   },
   {
-    planId: 1,
+    planId: 2,
     name: "Yearly",
     price: 60000,
     durationInMonths: 12,

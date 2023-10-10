@@ -42,5 +42,4 @@ export interface updateLandData {
 
 export interface LandFilterData {
   status: enumLandStatus;
-  boosted: boolean;
 }

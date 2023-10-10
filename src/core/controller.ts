@@ -18,7 +18,6 @@ export const controller = async <T = unknown, R = unknown, F = unknown>({
       | F
       | { [key: string]: string },
     file: req.file as Express.Multer.File,
-    files: req.files as Express.Multer.File[],
   };
 
   if (req.user) params.user = req.user;

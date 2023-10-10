@@ -41,9 +41,21 @@ export const updateLandSchema = Joi.object<updateLandData>({
   latitude: Joi.number().optional().allow(""),
   inspectScheduleDay: Joi.date().optional().allow(""),
   inspectScheduleTime: Joi.string().optional().allow(""),
+  rentPerAnnum: Joi.number().optional().allow(""),
+  images: Joi.array()
+    .items({
+      name: Joi.string().required(),
+      fileId: Joi.number().required(),
+    })
+    .optional(),
+  documents: Joi.array()
+    .items({
+      name: Joi.string().required(),
+      fileId: Joi.number().required(),
+    })
+    .optional(),
 });
 
 export const listOrBoostLandSchema = Joi.object<LandFilterData>({
   status: Joi.string().optional(),
-  boosted: Joi.boolean().optional(),
 });

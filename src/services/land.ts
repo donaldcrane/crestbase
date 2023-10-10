@@ -100,7 +100,7 @@ export const fetchAllUserLands: Service<unknown, unknown, LandFilterData> = ({
       results: data,
       pagination: updatePagination(pagination, totalLands ?? 0),
     };
-    return response.success(responseData, "Lands fetched successfully");
+    return response.success(responseData, "User Lands fetched successfully");
   });
 
 export const fetchLandById: Service = ({ id }) =>
