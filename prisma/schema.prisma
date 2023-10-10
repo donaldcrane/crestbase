@@ -1,0 +1,152 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Users {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique @db.VarChar(255)
+  password  String
+  name      String
+  phone     String   @unique
+  photo     String
+  dob       String
+  gender    String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+  lands     Lands[]
+}
+
+model Lands {
+  id                  Int             @id @default(autoincrement())
+  userId              Int
+  status              enumLandStatus  @default(available)
+  name                String          @db.VarChar(255)
+  size                String          @db.VarChar(255)
+  fullPrice           Int
+  initialDeposit      Int
+  location            String
+  area                String
+  features            String
+  categoryId          Int
+  longitude           Float
+  latitude            Float
+  inspectScheduleDay  DateTime
+  inspectScheduleTime String
+  rentPerAnnum        Int
+  boosted             Boolean         @default(false)
+  createdAt           DateTime        @default(now())
+  updatedAt           DateTime        @default(now()) @updatedAt
+  user                Users           @relation(fields: [userId], references: [id])
+  category            Categories      @relation(fields: [categoryId], references: [id])
+  images              LandImages[]
+  documents           LandDocuments[]
+}
+
+model Categories {
+  id        Int      @id @default(autoincrement())
+  name      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+  lands     Lands[]
+}
+
+model LandImages {
+  id        Int      @id @default(autoincrement())
+  name      String
+  fileId    Int
+  landId    Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  file FileUploads @relation(fields: [fileId], references: [id], onUpdate: Restrict, onDelete: Cascade)
+  land Lands       @relation(fields: [landId], references: [id], onUpdate: Restrict, onDelete: Cascade)
+
+  @@unique([fileId, landId])
+}
+
+model LandDocuments {
+  id        Int      @id @default(autoincrement())
+  name      String
+  fileId    Int
+  landId    Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  file FileUploads @relation(fields: [fileId], references: [id], onUpdate: Restrict, onDelete: Cascade)
+  land Lands       @relation(fields: [landId], references: [id], onUpdate: Restrict, onDelete: Cascade)
+
+  @@unique([fileId, landId])
+}
+
+model Plans {
+  id                Int                 @id @default(autoincrement())
+  name              enumPlanName
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime            @default(now()) @updatedAt
+  subscriptionPlans SubscriptionPlans[]
+}
+
+model SubscriptionPlans {
+  id               Int      @id @default(autoincrement())
+  planId           Int
+  name             String
+  price            Int
+  durationInMonths Int
+  features         String
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @default(now()) @updatedAt
+
+  plan Plans @relation(fields: [planId], references: [id], onUpdate: Restrict)
+}
+
+model FileUploads {
+  id            Int             @id @default(autoincrement())
+  key           String          @db.VarChar(255)
+  fileName      String          @db.VarChar(255)
+  type          enumFileType    @default(image)
+  url           String          @db.VarChar(255)
+  mimetype      String
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @default(now()) @updatedAt
+  landDocuments LandDocuments[]
+  landImages    LandImages[]
+}
+
+enum enumFileType {
+  audio
+  video
+  image
+  document
+  other
+}
+
+enum enumLandImageName {
+  frontView
+  mainView
+  video
+}
+
+enum enumLandDocumentName {
+  certificate_of_ownership
+  deed_of_assignment
+  survery_plan
+  allocation_form
+}
+
+enum enumLandStatus {
+  available
+  unlisted
+}
+
+enum enumPlanName {
+  premiumListing
+  premiumBoostListing
+}
